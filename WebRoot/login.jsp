@@ -66,9 +66,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </style>
  
   <div align="center" style="padding-top: 2em">
-        <span style="font-size: 3em">用户登录/LOGIN</span> 
-        <span style="font-size: 3em color:red"><%=request.getAttribute("error")==null?"": request.getAttribute("error")%></span>
-    <form action="<%=basePath%>servlet/checkLogin" method="post">
+        <span style="font-size: 3em">用户登录/LOGIN</span>
+        <div style="color:red"><%=request.getAttribute("error") == null ? "" : request.getAttribute("error") %></div>
+        <form action="<%=basePath%>servlet/checkLogin" method="post">
         <table style="padding-left: 1em;">
                 <tr>
                     <td>用户名：</td>
