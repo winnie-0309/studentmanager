@@ -13,7 +13,7 @@ public class Register extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
-		String username=request.getParameter("username");
+		String username=request.getParameter("name");
 		String password=request.getParameter("password");
 
 	}

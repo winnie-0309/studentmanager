@@ -30,7 +30,7 @@ public class CheckLogin extends HttpServlet {
 		response.setCharacterEncoding("utf-8");
 
 		String type = request.getParameter("type");
-		String name = request.getParameter("username");
+		String name = request.getParameter("name");
 		String password = request.getParameter("password");
 		// 生成验证码
 		String checkcode = request.getParameter("checkcode");
@@ -47,7 +47,7 @@ public class CheckLogin extends HttpServlet {
 				Teacher t = tmg.checkLogin(name, password);
 				if (t == null) {
 					request.setAttribute("error", "用户名，密码或许不正确！");
-					request.getRequestDispatcher("/teaLogin.jsp").forward(request,
+					request.getRequestDispatcher("/login.jsp").forward(request,
 							response);
 				} else {
 					session.setAttribute("person", t);
@@ -57,7 +57,7 @@ public class CheckLogin extends HttpServlet {
 					request.setAttribute("pageSize", pageSize);
 					request.setAttribute("pageModel", pageModel);
 					request.getRequestDispatcher("/jsp/teacher/list.jsp")
-							.forward(request, response);
+					.forward(request, response);
 				}
 			} else if ("student".equals(type)) {
 				StudentManager smg = new StudentManagerImpl();
@@ -65,7 +65,7 @@ public class CheckLogin extends HttpServlet {
 				s = smg.checkLogin(name, password);
 				if (s == null) {
 					request.setAttribute("error", "登陆失败：用户名，密码，验证码或许不正确！");
-					request.getRequestDispatcher("/stuLogin.jsp").forward(request,
+					request.getRequestDispatcher("/login.jsp").forward(request,
 							response);
 				} else {
 					session.setAttribute("person", s);
@@ -80,7 +80,7 @@ public class CheckLogin extends HttpServlet {
 			}
 		} else {
 			request.setAttribute("error", "验证码或许不正确！");
-			request.getRequestDispatcher("/error.jsp").forward(request,
+			request.getRequestDispatcher("/login.jsp").forward(request,
 					response);
 		}
 

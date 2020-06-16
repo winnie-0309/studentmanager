@@ -20,6 +20,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="../css/student.css">
   </head>
 <body>
-	 
-	</body>
+	 学生还是老师列表处决与需求
+</body>
 </html>
