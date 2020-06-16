@@ -19,25 +19,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="css/student.css">
 	-->
 	<script language="javascript">
-	    function reGenerateCode(){
-	        var img = document.getElementById("CreateCheckCode");
-	        img.src="<%=basePath%>servlet/picCodeGenerator?nocache=" + new Date().getTime();
-	    }
-	    
-	    function getRadioBoxValue(radioName){ 
-             var obj = document.getElementsByName(radioName);
-                   for(i=0; i<obj.length;i++)    {
-                   if(obj[i].checked)    { 
-                       return   obj[i].value; 
-                   } 
-               }         
-              return "undefined";       
-        } 
-	    
-	    function register(){
-	    	var type = getRadioBoxValue("type");
-	    	location.href="<%=basePath%>servlet/action?action=add_"+type;
-	    }
+	        /*分析：点击图片，需要换一张
+              1.给图片绑定单击事件
+              2.重新设置图片的src属性值
+            */
+　　　　　　window.onload = function(){
+　　　　　　　　 document.getElementById("CreateCheckCode").onclick = function(){
+　　　　　　　　　　this.src="<%=basePath%>servlet/picCodeGenerator?nocache=" + new Date().getTime();
+　　　　　　　　 }
+　　　　　　 }
+
+            function getRadioBoxValue(radioName){
+                 var obj = document.getElementsByName(radioName);
+                       for(i=0; i<obj.length;i++)    {
+                       if(obj[i].checked)    {
+                           return   obj[i].value;
+                       }
+                   }
+                  return "undefined";
+            }
+
+            function register(){
+                var type = getRadioBoxValue("type");
+                location.href="<%=basePath%>servlet/action?action=add_"+type;
+            }
     </script>
 
   </head>
@@ -79,7 +84,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <td>验证码：</td>
                     <td><input name="checkcode" type="text" id="checkCode" title="验证码不区分大小写" size="8",maxlength="4"/>
                     <img src="<%=basePath%>servlet/picCodeGenerator" id="CreateCheckCode" align="middle">
-                    <a href="" onclick="reGenerateCode()">看不清楚，换一个</a>  
                     </td>
                 </tr>
             </table>
