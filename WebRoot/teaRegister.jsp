@@ -20,9 +20,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
 
+ <script language="javascript">
+    function myReload(){
+        document.getElementById("CreateCheckCode").src 
+        = document.getElementById("CreateCheckCode").src
+        + "?nocache=" + new Date().getTime();
+    }
+    </script>
+
   </head>
   
   <body>
-    This is my JSP page. <br>
+      <from method="post" action="">
+        <lable>
+             <h1>用户注册页面</h1>
+             <hr />
+        </lable>
+      <div id="teacherAdd">  
+        <h1>老师注册</h1>  
+        <form action="<%=basePath%>servlet/Register?type=teacher"" method="post">  
+            <input type="text" required="required" placeholder="用户名" name="name"></input><br/>
+            <input type="password" required="required" placeholder="密码" name="password"></input><br/>
+            <button class="but" type="submit">注册</button>  
+        </form>  
+    </div>  
+      </from>
   </body>
 </html>

@@ -19,6 +19,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
+	<script language="javascript">
+    function myReload(){
+        document.getElementById("CreateCheckCode").src 
+        = document.getElementById("CreateCheckCode").src
+        + "?nocache=" + new Date().getTime();
+    }
+    </script>
 
   </head>
   
@@ -28,13 +35,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
              <h1>用户注册页面</h1>
              <hr />
         </lable>
-        <div>
-             用户名：<input type="text" placeholder="请输入用户名" name="name" required/><br>
-             密&nbsp; &nbsp;码:<input type="password" placeholder="请输入密码"name="password" required/><br>
-             确&nbsp; &nbsp;认:<input type="password" placeholder="请再次输入密码"name="repeat" required/><br>
-        <button class="but" type="submit">提交注册</button>  
-        </div>
-         
+      <div id="studentAdd">  
+        <h1>学生注册</h1>  
+        <form action="<%=basePath%>servlet/Register?type=student"" method="post">  
+            <input type="text" required="required" placeholder="用户名" name="name"></input><br/>
+            <input type="password" required="required" placeholder="密码" name="password"></input><br/>
+            <input type="text" required="required" placeholder="性別" name="gender"></input><br/>
+            <input type="text" required="required" placeholder="生日" name="birthday"></input><br/>
+            <input type="text" required="required" placeholder="地址" name="address"></input><br/>
+            <button class="but" type="submit">新增</button>  
+        </form>  
+    </div>  
       </from>
   </body>
 </html>

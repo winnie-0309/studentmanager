@@ -15,6 +15,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="../css/student.css">
   </head>
 <body>
-	TODO -- 新增老师（或老师注册）
+	
 </body>
 </html>

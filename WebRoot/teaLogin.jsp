@@ -31,7 +31,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <form action="<%=basePath%>servlet/checkLogin?type=teacher" method="post">  
             <input type="text" required="required" placeholder="用户名" name="username"></input>  
             <input type="password" required="required" placeholder="密码" name="password"></input>
-            <input name="checkcode" type="text" id="checkCode" title="验证码区分大小写" size="8",maxlength="4"/>
+            <input name="checkcode" type="text" id="checkCode" title="验证码不区分大小写" size="8",maxlength="4"/>
             <img src="<%=basePath%>servlet/picCodeGenerator" id="CreateCheckCode" align="middle">
             <a href="" onclick="myReload()">看不清楚，换一个</a>  
             <button class="but" type="submit">登录</button>  

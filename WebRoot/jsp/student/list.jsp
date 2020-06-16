@@ -33,9 +33,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    <table align="center" >
 		        <tr>
 		            <td align="center" colspan="4">
-		                <h2>所有信息 - <a href="<%=basePath%>servlet/action?action=add_student">新增</a></h2> 
+		            <h2>所有信息 </h2> 
 		            </td>
+		        <tr>
+		            <td>姓名 </td>
+		            <td><input type="text" name="name"/></td>
+		            <td><a href="<%=basePath%>servlet/Page?type=student">查找</a></td>
+		            <td><a href="<%=basePath%>servlet/action?action=add_student">新增</a></td>
 		        </tr>
+		        </tr>	       
 		        <tr align="center">
 		            <td><b>ID</b></td>
 		            <td><b>姓名</b></td>
