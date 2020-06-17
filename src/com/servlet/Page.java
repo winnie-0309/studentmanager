@@ -2,6 +2,8 @@ package com.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -29,18 +31,31 @@ public class Page extends HttpServlet {
 		String type = request.getParameter("type");
 		String pageNo = request.getParameter("pageNo");
 		String pageSize = request.getParameter("pageSize");
-		
+		String name = request.getParameter("name");
 		request.setAttribute("pageNo", pageNo);
 		request.setAttribute("pageSize", pageSize);
-		
+		Map<String, String> parameters = new HashMap<String,String>();
 		if("teacher".equals(type)) {
 			TeacherManager smg = new TeacherManagerImpl();
-			PageModel<Teacher> pageModel = smg.getTeachers(pageNo, pageSize);
+			PageModel<Teacher> pageModel = new PageModel<Teacher>();
+			if(name!=null&&name.length()>0){
+				//没有实现的接口
+				parameters.put("username", name);
+				pageModel = smg.queryTeachers(parameters,pageNo,pageSize);
+			}else{
+				pageModel = smg.getTeachers(pageNo, pageSize);
+			}
 			request.setAttribute("pageModel", pageModel);
 			request.getRequestDispatcher("/jsp/teacher/list.jsp").forward(request, response);
 		}else {
 			StudentManager smg = new StudentManagerImpl();
-			PageModel<Student> pageModel = smg.getStudents(pageNo, pageSize);
+			PageModel<Student> pageModel = new PageModel<Student>();
+			if(name!=null&&name.length()>0){
+				parameters.put("name", name);
+				pageModel = smg.queryStudents(parameters,pageNo,pageSize);
+			}else{
+				pageModel = smg.getStudents(pageNo, pageSize);
+			}
 			request.setAttribute("pageModel", pageModel);
 			request.getRequestDispatcher("/jsp/student/list.jsp").forward(request, response);
 		}

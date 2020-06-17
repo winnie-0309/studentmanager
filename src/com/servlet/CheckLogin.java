@@ -34,9 +34,8 @@ public class CheckLogin extends HttpServlet {
 		String password = request.getParameter("password");
 		// 生成验证码
 		String checkcode = request.getParameter("checkcode");
-		String piccode = (String) request.getSession()
-				.getAttribute("checkcode");
-
+		String piccode = (String) request.getSession().getAttribute("checkcode");
+		//System.out.println(checkcode+" ?= "+piccode);
 		if (checkcode.equalsIgnoreCase(piccode)) {
 
 			HttpSession session = request.getSession();
@@ -80,6 +79,7 @@ public class CheckLogin extends HttpServlet {
 			}
 		} else {
 			request.setAttribute("error", "验证码或许不正确！");
+			request.getSession().setAttribute("checkcode", null);
 			request.getRequestDispatcher("/login.jsp").forward(request,
 					response);
 		}
