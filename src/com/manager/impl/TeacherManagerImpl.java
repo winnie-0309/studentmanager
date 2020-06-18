@@ -441,7 +441,7 @@ public class TeacherManagerImpl implements TeacherManager {
 		String baseSql = "SELECT ROWNUM rn, t.* FROM teacher t";
 		if (parameters != null && parameters.size()>0) {
 			Set<Entry<String, String>> entrySet = parameters.entrySet();
-			baseSql = " where 1 = 1 ";
+			baseSql = baseSql+ " where 1 = 1 ";
 			for (Entry<String, String> entry : entrySet) {
 				//TODO only consider string equals
 				baseSql = baseSql + " and t."+entry.getKey()+ " ='"+entry.getValue()+"' ";

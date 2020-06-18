@@ -21,6 +21,9 @@
 <meta http-equiv="description" content="学生列表">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="css/student.css">
+<script type="text/javascript">
+	
+</script>
 </head>
 
 <body>
@@ -42,7 +45,7 @@
 				<td>姓名</td>
 				<td><input type="text" name="name" />
 				</td>
-				<td><a href="<%=basePath%>servlet/Page?type=student">查找</a>
+				<td><input type="button" value="查找"/>
 				</td>
 				<td><a href="<%=basePath%>servlet/action?action=add_student">新增</a>
 				</td>

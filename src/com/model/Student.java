@@ -1,43 +1,26 @@
 package com.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.util.DateFormater;
 
-public class Student {
-    private int id;
+public class Student extends Person{
     private String sid;
-    private String name;
-    private String password;
     private String gender;
     private Date birthday;
     private String address;
-	public int getId() {
-		return id;
+    
+    public String getTitle(){
+		return "同学";
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
+
 	public String getSid() {
 		return sid;
 	}
 	public void setSid(String sid) {
 		this.sid = sid;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
+
 	public String getGender() {
 		return gender;
 	}
@@ -59,7 +42,7 @@ public class Student {
 	
 	@Override
 	public String toString() {
-		return "Student [id=" + id + ", sid=" + sid + ", name=" + name + ", password=" + password + ", gender=" + gender
+		return "Student [id=" + getId() + ", sid=" + sid + ", name=" + getName() + ", password=" + getPassword() + ", gender=" + gender
 				+ ", birthday=" + birthday + ", address=" + address + "]";
 	}
 	

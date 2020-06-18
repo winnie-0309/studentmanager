@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 
 import com.manager.StudentManager;
 import com.model.Student;
+import com.model.Teacher;
 import com.util.DBO;
 import com.util.DateFormater;
 import com.util.PageModel;
@@ -182,10 +183,6 @@ public class StudentManagerImpl implements StudentManager {
 
 	}
 
-	public PageModel<Student> getStudents(String pageNo, String pageSize) {
-		return this.getStudents(null , pageNo, pageSize);
-	}
-
 	public Student getStudent(String id) {
 		// oracle and H2
 		String sql = "SELECT * FROM student where id=?";
@@ -245,12 +242,6 @@ public class StudentManagerImpl implements StudentManager {
 		return 0;
 	}
 
-	public PageModel<Student> getStudents(String address, String pageNo, String pageSize) {
-		Map<String,String> parameters = new HashMap<String,String>();
-		parameters.put("address", address);
-		return this.queryStudents(parameters , pageNo, pageSize);
-	}
-
 	public PageModel<Student> queryStudents(Map<String, String> parameters,
 			String pageNo, String pageSize) {
 		PageModel<Student> pageModel = null;
@@ -260,7 +251,7 @@ public class StudentManagerImpl implements StudentManager {
 		// 
 		if (parameters != null && parameters.size()>0) {
 			Set<Entry<String, String>> entrySet = parameters.entrySet();
-			baseSql = " where 1 = 1 ";
+			baseSql = baseSql+ " where 1 = 1 ";
 			for (Entry<String, String> entry : entrySet) {
 				//TODO only consider string equals
 				baseSql = baseSql + " and s."+entry.getKey()+ " ='"+entry.getValue()+"' ";
@@ -326,7 +317,58 @@ public class StudentManagerImpl implements StudentManager {
 	}
 
 	private List<Student> executeSql(String baseSql) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement st = null;
+		ResultSet rs = null;
+		Connection conn = null;
+		List<Student> results = new ArrayList<Student>();
+		try {
+			conn = DBO.getConnection();
+			st = conn.createStatement();
+			rs = st.executeQuery(baseSql);
+			while (rs.next()) {
+				Student s = new Student();
+				s.setId(rs.getInt("id"));
+				s.setName(rs.getString("name"));
+				// encrpt
+				s.setPassword(rs.getString("password"));
+				s.setGender(rs.getString("gender"));
+				s.setBirthday(DateFormater.sqlDate2String(rs.getDate("birthday")));
+				s.setAddress(rs.getString("address"));
+				results.add(s);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (st != null) {
+				try {
+					st.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+			
+		return results;
+	}
+
+	public PageModel<Student> getStudents(String pageNo, String pageSize) {
+		return this.queryStudents(null, pageNo, pageSize);
 	}
 }

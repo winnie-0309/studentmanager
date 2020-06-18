@@ -55,6 +55,10 @@ public class CheckLogin extends HttpServlet {
 							response);
 				} else {
 					session.setAttribute("person", t);
+					session.setAttribute("type", "teacher");
+					request.getRequestDispatcher("/jsp/home.jsp")
+					.forward(request, response);
+					/*
 					PageModel<Teacher> pageModel = tmg.getTeachers(pageNo,
 							pageSize);
 					request.setAttribute("pageNo", pageNo);
@@ -62,6 +66,7 @@ public class CheckLogin extends HttpServlet {
 					request.setAttribute("pageModel", pageModel);
 					request.getRequestDispatcher("/jsp/teacher/list.jsp")
 					.forward(request, response);
+					*/
 				}
 			} else if ("student".equals(type)) {
 				StudentManager smg = new StudentManagerImpl();
@@ -73,6 +78,10 @@ public class CheckLogin extends HttpServlet {
 							response);
 				} else {
 					session.setAttribute("person", s);
+					session.setAttribute("type", "student");
+					request.getRequestDispatcher("/jsp/home.jsp")
+					.forward(request, response);
+					/*
 					PageModel<Student> pageModel = smg.getStudents(pageNo,
 							pageSize);
 					request.setAttribute("pageNo", pageNo);
@@ -80,6 +89,7 @@ public class CheckLogin extends HttpServlet {
 					request.setAttribute("pageModel", pageModel);
 					request.getRequestDispatcher("/jsp/student/list.jsp")
 							.forward(request, response);
+							*/
 				}
 			}
 		} else {

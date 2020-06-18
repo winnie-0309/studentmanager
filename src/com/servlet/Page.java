@@ -33,7 +33,8 @@ public class Page extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String type = request.getParameter("type");
+		//String type = (String)request.getSession().getAttribute("type");
+		String type = (String)request.getParameter("type");
 		String pageNo = request.getParameter("pageNo");
 		String pageSize = request.getParameter("pageSize");
 		String name = request.getParameter("name");

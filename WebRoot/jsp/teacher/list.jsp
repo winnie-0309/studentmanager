@@ -20,6 +20,24 @@
 <meta http-equiv="description" content="老师列表">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="css/student.css">
+<script type="text/javascript">
+	function getRadioBoxValue(radioName){
+                 var obj = document.getElementsByName(radioName);
+                       for(i=0; i<obj.length;i++)    {
+                       if(obj[i].checked)    {
+                           return   obj[i].value;
+                       }
+                   }
+                  return "undefined";
+            }
+            
+     function query(){
+       var type = getRadioBoxValue("type");
+       var name = document.getElementById("username");
+       window.href="<%=basePath%>servlet/Page?type="+type+"&name="+name;
+     }
+	            
+</script>
 </head>
 <body>
 	<h1>老师列表</h1>
@@ -38,13 +56,13 @@
 				</td>
 				</tr>
 				<tr>
-				<td><input type="radio" name="type" value="teacher">教师
-					<input type="radio" name="type" value="student" checked>学生</td>
+				<td><input type="radio" name="type" value="teacher" checked>教师
+					<input type="radio" name="type" value="student">学生</td>
 			</tr>
 			<tr>
 				<td>姓名</td>
-				<td><input type="text"  /></td>
-				<td><a href="<%=basePath%>servlet/Page?type=teacher">查找</a></td>
+				<td><input type="text" id="username"/></td>
+				<td><input type="button" name='query' id='query' value="查找" onclick="javascript:queryTeacher();"/></td>
 				<td><a href="<%=basePath%>servlet/action?action=add_teacher">新增</a>
 				</td>
 			</tr>
