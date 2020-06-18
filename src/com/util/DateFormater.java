@@ -4,6 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 日期转化工具
+ * 数据库Sql日期和java日期不一致
+ *
+ */
 public class DateFormater {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");

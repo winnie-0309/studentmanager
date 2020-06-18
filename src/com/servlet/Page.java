@@ -17,6 +17,11 @@ import com.model.Student;
 import com.model.Teacher;
 import com.util.PageModel;
 
+/**
+ *  主要是用于分页列表
+ *  需要将数据封装到一个PageModel中
+ *
+ */
 public class Page extends HttpServlet {
 
 	@Override

@@ -3,7 +3,7 @@ import java.util.List;
 
 /** 
  * 封装分页信息 
- * @author Administrator 
+ *  @author yanran
  * 
  */  
 public class PageModel<E> {  

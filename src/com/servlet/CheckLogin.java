@@ -18,6 +18,11 @@ import com.model.Student;
 import com.model.Teacher;
 import com.util.PageModel;
 
+/**
+ * 处理老师、学生登录请求
+ * 并将老师或学生信息存到session中方便后续调用，不需要再查询数据库
+ *
+ */
 public class CheckLogin extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

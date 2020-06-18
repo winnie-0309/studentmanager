@@ -14,7 +14,11 @@ import com.manager.impl.TeacherManagerImpl;
 import com.model.Student;
 import com.model.Teacher;
 import com.util.PageModel;
-
+/**
+ * 对所有请求封装并实现转发：
+ * 处理老师、学生的新增、修改、删除、查询等请求
+ *
+ */
 public class ActionServlet extends HttpServlet {
 
 	private StudentManager studentManager = new StudentManagerImpl();
@@ -46,8 +50,6 @@ public class ActionServlet extends HttpServlet {
 				success = studentManager.deleteStudent(id);
 				// retrieve list page 需要优化代码 提取为一个函数
 				if (success) {
-					String pageNo = "1";
-					String pageSize = "5";
 					PageModel<Student> pageModel = studentManager.getStudents(pageNo, pageSize);
 					req.setAttribute("pageNo", pageNo);
 					req.setAttribute("pageSize", pageSize);
@@ -101,7 +103,7 @@ public class ActionServlet extends HttpServlet {
 				if (teacher == null) {
 					throw new RuntimeException("老师信息已经不存在!!! id=" + id);
 				}
-				req.getRequestDispatcher("/jsp/teacher/upadate.jsp").forward(req, resp);
+				fowardToListPage(req,resp,true);
 			} else if ("save_teacher".equals(actionType)) {
 				Teacher teacher = new Teacher();
 				teacher.setUsername(name);
@@ -113,14 +115,24 @@ public class ActionServlet extends HttpServlet {
 					success = teacherManager.updateTeacher(teacher);
 				}
 				// retrieve list page
-				if (success) {
-					req.getRequestDispatcher("/jsp/teacher/list.jsp").forward(req, resp);
-				} else {
-					req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
-				}
+				fowardToListPage(req, resp, success);
 			} else if ("add_teacher".equals(actionType)) {
 				req.getRequestDispatcher("/jsp/teacher/add.jsp").forward(req, resp);
 			}
+		}
+	}
+
+	private static final String pageNo = "1";
+	private static final String pageSize = "5";
+	private void fowardToListPage(HttpServletRequest req, HttpServletResponse resp, boolean success) {
+		if (success) {
+			PageModel<Teacher> pageModel = teacherManager.getTeachers(pageNo, pageSize);
+			req.setAttribute("pageNo", pageNo);
+			req.setAttribute("pageSize", pageSize);
+			req.setAttribute("pageModel", pageModel);
+			req.getRequestDispatcher("/jsp/teacher/list.jsp").forward(req, resp);
+		} else {
+			req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
 		}
 	}
 
