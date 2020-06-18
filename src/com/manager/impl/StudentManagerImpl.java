@@ -6,8 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import com.manager.StudentManager;
 import com.model.Student;
@@ -180,65 +183,7 @@ public class StudentManagerImpl implements StudentManager {
 	}
 
 	public PageModel<Student> getStudents(String pageNo, String pageSize) {
-		PageModel<Student> pageModel = null;
-		List<Student> list = new ArrayList<Student>();
-		// oracle and H2
-		String sql ="SELECT * FROM (SELECT ROWNUM rn, s.* FROM student s) a WHERE a.rn>=("+pageNo+" - 1) * "+pageSize+" + 1 AND a.rn <= "+pageNo+" * "+pageSize;
-		//找到符合条件的学生记录
-		Statement st = null;
-		ResultSet rs = null;
-		Connection conn = null;
-		try {
-			conn = DBO.getConnection();
-			st = conn.createStatement();
-			rs = st.executeQuery(sql);
-			while (rs.next()) {
-				Student s = new Student();
-				s.setId(rs.getInt("id"));
-				s.setName(rs.getString("name"));
-				// encrpt
-				s.setPassword(rs.getString("password"));
-				s.setGender(rs.getString("gender"));
-				s.setBirthday(DateFormater.sqlDate2String(rs.getDate("birthday")));
-				s.setAddress(rs.getString("address"));
-				list.add(s);
-			}
-			//找到学生表总记录数
-			int total = getTotal();
-			pageModel = new PageModel<Student>();
-			pageModel.setPageNo(Integer.parseInt(pageNo));
-			pageModel.setPageSize(Integer.parseInt(pageSize));
-			pageModel.setTotalRecords(total);
-			pageModel.setList(list);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (st != null) {
-				try {
-					st.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		return pageModel;
+		return this.getStudents(null , pageNo, pageSize);
 	}
 
 	public Student getStudent(String id) {
@@ -300,47 +245,87 @@ public class StudentManagerImpl implements StudentManager {
 		return 0;
 	}
 
-	public PageModel<Student> queryStudents(String address, String pageNo, String pageSize) {
-		PageModel<Student> pageModel = null;
-		List<Student> list = new ArrayList<Student>();
-		// oracle and H2
-		String sql = "SELECT * FROM student where address=?";
-		PreparedStatement pst = null;
-		ResultSet rs = null;
-		Connection conn = null;
-		try {
-			conn = DBO.getConnection();
-			pst = conn.prepareStatement(sql);
-			pst.setString(1,address);
-			rs = pst.executeQuery();
-			Student student = null;
-			while (rs.next()) {
-				student = new Student();
-				student.setId(rs.getInt("id"));
-				student.setName(rs.getString("name"));
-				student.setPassword(rs.getString("password"));
-				student.setGender(rs.getString("gender"));
-				student.setBirthday(DateFormater.sqlDate2String(rs.getDate("birthday")));
-				student.setAddress(rs.getString("address"));
-				list.add(student);
-			}
-			//组装分页数据
-			pageModel = new PageModel<Student>();
-			pageModel.setList(list);
-			pageModel.setPageNo(Integer.parseInt(pageNo));
-			pageModel.setPageSize(Integer.parseInt(pageSize));
-			pageModel.setTotalRecords(getTotal());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			//zzTODO
-		}
-		return pageModel;
+	public PageModel<Student> getStudents(String address, String pageNo, String pageSize) {
+		Map<String,String> parameters = new HashMap<String,String>();
+		parameters.put("address", address);
+		return this.queryStudents(parameters , pageNo, pageSize);
 	}
 
 	public PageModel<Student> queryStudents(Map<String, String> parameters,
 			String pageNo, String pageSize) {
+		PageModel<Student> pageModel = null;
+		List<Student> list = new ArrayList<Student>();
+		// oracle and H2
+		String baseSql = "SELECT ROWNUM rn, s.* FROM student s";
+		// 
+		if (parameters != null && parameters.size()>0) {
+			Set<Entry<String, String>> entrySet = parameters.entrySet();
+			baseSql = " where 1 = 1 ";
+			for (Entry<String, String> entry : entrySet) {
+				//TODO only consider string equals
+				baseSql = baseSql + " and s."+entry.getKey()+ " ='"+entry.getValue()+"' ";
+			}
+		}
+		//找到表总记录数
+		List<Student> totals = executeSql(baseSql);
+		//
+		String sql ="SELECT * FROM ("+baseSql+") a WHERE a.rn>=("+pageNo+" - 1) * "+pageSize+" + 1 AND a.rn <= "+pageNo+" * "+pageSize;
+		Statement st = null;
+		ResultSet rs = null;
+		Connection conn = null;
+		try {
+			conn = DBO.getConnection();
+			st = conn.createStatement();
+			rs = st.executeQuery(sql);
+			while (rs.next()) {
+				Student s = new Student();
+				s.setId(rs.getInt("id"));
+				s.setName(rs.getString("name"));
+				// encrpt
+				s.setPassword(rs.getString("password"));
+				s.setGender(rs.getString("gender"));
+				s.setBirthday(DateFormater.sqlDate2String(rs.getDate("birthday")));
+				s.setAddress(rs.getString("address"));
+				list.add(s);
+			}
+			//找到学生表总记录数
+			pageModel = new PageModel<Student>();
+			pageModel.setPageNo(Integer.parseInt(pageNo));
+			pageModel.setPageSize(Integer.parseInt(pageSize));
+			pageModel.setTotalRecords(totals.size());
+			pageModel.setList(list);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (st != null) {
+				try {
+					st.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return pageModel;
+	}
+
+	private List<Student> executeSql(String baseSql) {
 		// TODO Auto-generated method stub
 		return null;
 	}

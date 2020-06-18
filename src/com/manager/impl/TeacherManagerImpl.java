@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.manager.TeacherManager;
 import com.model.Student;
@@ -379,16 +381,77 @@ public class TeacherManagerImpl implements TeacherManager {
 	}
 
 
-	private int getTotal() {
-		// TODO Auto-generated method stub
-		return 0;
+	private List<Teacher> executeSql(String sql) {
+		Statement st = null;
+		ResultSet rs = null;
+		Connection conn = null;
+		List<Teacher> results = new ArrayList<Teacher>();
+		try {
+			conn = DBO.getConnection();
+			st = conn.createStatement();
+			rs = st.executeQuery(sql);
+			while (rs.next()) {
+				Teacher t = new Teacher();
+				t.setId(rs.getInt("id"));
+				t.setUsername(rs.getString("username"));
+				// encrpt
+				t.setPassword(rs.getString("password"));
+				results.add(t);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (st != null) {
+				try {
+					st.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+			
+		return results;
 	}
 
 	public PageModel<Teacher> getTeachers(String start, String pagesize) {
+		return queryTeachers(null,start, pagesize);
+	}
+
+	public PageModel<Teacher> queryTeachers(Map<String, String> parameters, String pageNo,
+			String pageSize) {
 		PageModel<Teacher> pageModel = null;
 		List<Teacher> list = new ArrayList<Teacher>();
+		String baseSql = "SELECT ROWNUM rn, t.* FROM teacher t";
+		if (parameters != null && parameters.size()>0) {
+			Set<Entry<String, String>> entrySet = parameters.entrySet();
+			baseSql = " where 1 = 1 ";
+			for (Entry<String, String> entry : entrySet) {
+				//TODO only consider string equals
+				baseSql = baseSql + " and t."+entry.getKey()+ " ='"+entry.getValue()+"' ";
+			}
+		}
+		//找到老师表总记录数
+		List<Teacher> totals = executeSql(baseSql);
+		
 		// oracle and H2
-		String sql ="SELECT * FROM (SELECT ROWNUM rn, t.* FROM teacher t) a WHERE a.rn>=("+start+" - 1) * "+pagesize+" + 1 AND a.rn <= "+start+" * "+pagesize;
+		String sql ="SELECT * FROM ("+baseSql+") a WHERE a.rn>=("+pageNo+" - 1) * "+pageSize+" + 1 AND a.rn <= "+pageNo+" * "+pageSize;
 		//找到符合条件的老师记录
 		Statement st = null;
 		ResultSet rs = null;
@@ -405,12 +468,10 @@ public class TeacherManagerImpl implements TeacherManager {
 				t.setPassword(rs.getString("password"));
 				list.add(t);
 			}
-			//找到老师表总记录数
-			int total = getTotal();
 			pageModel = new PageModel<Teacher>();
-			pageModel.setPageNo(Integer.parseInt(start));
-			pageModel.setPageSize(Integer.parseInt(pagesize));
-			pageModel.setTotalRecords(total);
+			pageModel.setPageNo(Integer.parseInt(pageNo));
+			pageModel.setPageSize(Integer.parseInt(pageSize));
+			pageModel.setTotalRecords(totals.size());
 			pageModel.setList(list);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -441,11 +502,5 @@ public class TeacherManagerImpl implements TeacherManager {
 			}
 		}
 		return pageModel;
-	}
-
-	public PageModel<Teacher> queryTeachers(Map<String, String> parameters, String pageNo,
-			String pageSize) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

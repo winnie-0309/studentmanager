@@ -51,15 +51,8 @@ public class ActionServlet extends HttpServlet {
 			if ("delete_student".equals(actionType)) {
 				success = studentManager.deleteStudent(id);
 				// retrieve list page 需要优化代码 提取为一个函数
-				if (success) {
-					PageModel<Student> pageModel = studentManager.getStudents(pageNo, pageSize);
-					req.setAttribute("pageNo", pageNo);
-					req.setAttribute("pageSize", pageSize);
-					req.setAttribute("pageModel", pageModel);
-					req.getRequestDispatcher("/jsp/student/list.jsp").forward(req, resp);
-				} else {
-					req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
-				}
+				PageModel<Student> pageModel = studentManager.getStudents(pageNo, pageSize);
+				fowardToListPage(req, resp, success, "student", pageModel);
 			} else if ("update_student".equals(actionType)) {
 				// 先查询
 				Student student = studentManager.getStudent(id);
@@ -83,36 +76,21 @@ public class ActionServlet extends HttpServlet {
 					success = studentManager.updateStudent(student);
 				}
 				// retrieve list page 需要优化代码 提取为一个函数
-				if (success) {
-					PageModel<Student> pageModel = studentManager.getStudents(pageNo, pageSize);
-					req.setAttribute("pageNo", pageNo);
-					req.setAttribute("pageSize", pageSize);
-					req.setAttribute("pageModel", pageModel);
-					req.getRequestDispatcher("/jsp/student/list.jsp").forward(req, resp);
-				} else {
-					req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
-				}
+				PageModel<Student> pageModel = studentManager.getStudents(pageNo, pageSize);
+				fowardToListPage(req, resp, success, "student", pageModel);
 			} else if ("add_student".equals(actionType)) {
 				req.getRequestDispatcher("/jsp/student/add.jsp").forward(req, resp);
 			}
 		} else {
 			if ("delete_teacher".equals(actionType)) {
 				success = teacherManager.deleteTeacher(id);
-				if (success) {
-					PageModel<Teacher> pageModel = teacherManager.getTeachers(pageNo, pageSize);
-					req.setAttribute("pageNo", pageNo);
-					req.setAttribute("pageSize", pageSize);
-					req.setAttribute("pageModel", pageModel);
-					req.getRequestDispatcher("/jsp/teacher/list.jsp").forward(req, resp);
-				} else {
-					req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
-				}
+				PageModel<Teacher> pageModel = teacherManager.getTeachers(pageNo, pageSize);
+				fowardToListPage(req, resp, success, "teacher", pageModel);
 			} else if ("update_teacher".equals(actionType)) {
 				Teacher teacher = teacherManager.getTeacher(id);
 				if (teacher == null) {
 					throw new RuntimeException("老师信息已经不存在!!! id=" + id);
 				}
-				fowardToListPage(req,resp,true);
 				req.setAttribute("teacher", teacher);
 				req.getRequestDispatcher("/jsp/teacher/update.jsp").forward(req, resp);
 			} else if ("save_teacher".equals(actionType)) {
@@ -126,31 +104,22 @@ public class ActionServlet extends HttpServlet {
 					success = teacherManager.updateTeacher(teacher);
 				}
 				// retrieve list page
-				fowardToListPage(req, resp, success);
-				if (success) {
-					PageModel<Teacher> pageModel = teacherManager.getTeachers(pageNo, pageSize);
-					req.setAttribute("pageNo", pageNo);
-					req.setAttribute("pageSize", pageSize);
-					req.setAttribute("pageModel", pageModel);
-					req.getRequestDispatcher("/jsp/teacher/list.jsp").forward(req, resp);
-				} else {
-					req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
-				}
+				PageModel<Teacher> pageModel = teacherManager.getTeachers(pageNo, pageSize);
+				fowardToListPage(req, resp, success, "teacher", pageModel);
 			} else if ("add_teacher".equals(actionType)) {
 				req.getRequestDispatcher("/jsp/teacher/add.jsp").forward(req, resp);
 			}
 		}
 	}
 
-	private static final String pageNo = "1";
-	private static final String pageSize = "5";
-	private void fowardToListPage(HttpServletRequest req, HttpServletResponse resp, boolean success) {
+	private void fowardToListPage(HttpServletRequest req, HttpServletResponse resp, boolean success, String type,
+			PageModel pageModel) throws ServletException, IOException {
 		if (success) {
-			PageModel<Teacher> pageModel = teacherManager.getTeachers(pageNo, pageSize);
+			// PageModel<Teacher> pageModel = teacherManager.getTeachers(pageNo, pageSize);
 			req.setAttribute("pageNo", pageNo);
 			req.setAttribute("pageSize", pageSize);
 			req.setAttribute("pageModel", pageModel);
-			req.getRequestDispatcher("/jsp/teacher/list.jsp").forward(req, resp);
+			req.getRequestDispatcher("/jsp/" + type + "/list.jsp").forward(req, resp);
 		} else {
 			req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
 		}
