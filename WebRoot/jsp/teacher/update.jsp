@@ -34,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <tr>
             <td>密码：</td>
             <td><input type="password" required="required" placeholder="密码" name="password" value="<%=teacher.getPassword() %>"/></td></tr>
-            <tr><td><button class="but" type="submit">添加</button></td> 
+            <tr><td><button class="but" type="submit">修改</button></td> 
                 <td><button class="but" type="reset">重置</button></td></tr>
             </table> 
         </form>  

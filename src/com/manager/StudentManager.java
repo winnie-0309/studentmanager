@@ -4,6 +4,7 @@
 package com.manager;
 
 import java.util.List;
+import java.util.Map;
 
 import com.model.Student;
 import com.util.PageModel;
@@ -31,7 +32,10 @@ public interface StudentManager {
 	public PageModel<Student> queryStudents(String address, String pageNo, String pageSize);
 	// 查询所有的学生信息 -全列表不分页
 	public List<Student> getAllStudents();
-	// 查询学生信息需分页
+	//无条件查询学生信息默认第一页
 	public PageModel<Student> getStudents(String pageNo, String pageSize);
+	//按条件查询学生信息需分页
+	public PageModel<Student> queryStudents(Map<String, String> parameters,
+			String pageNo, String pageSize);
 
 }

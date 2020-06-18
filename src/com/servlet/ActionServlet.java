@@ -24,6 +24,8 @@ public class ActionServlet extends HttpServlet {
 	private StudentManager studentManager = new StudentManagerImpl();
 	private TeacherManager teacherManager = new TeacherManagerImpl();
 
+	private static final String pageNo = "1";
+	private static final String pageSize = "5";
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		this.doPost(req, resp);
@@ -82,8 +84,6 @@ public class ActionServlet extends HttpServlet {
 				}
 				// retrieve list page 需要优化代码 提取为一个函数
 				if (success) {
-					String pageNo = "1";
-					String pageSize = "5";
 					PageModel<Student> pageModel = studentManager.getStudents(pageNo, pageSize);
 					req.setAttribute("pageNo", pageNo);
 					req.setAttribute("pageSize", pageSize);
@@ -98,12 +98,23 @@ public class ActionServlet extends HttpServlet {
 		} else {
 			if ("delete_teacher".equals(actionType)) {
 				success = teacherManager.deleteTeacher(id);
+				if (success) {
+					PageModel<Teacher> pageModel = teacherManager.getTeachers(pageNo, pageSize);
+					req.setAttribute("pageNo", pageNo);
+					req.setAttribute("pageSize", pageSize);
+					req.setAttribute("pageModel", pageModel);
+					req.getRequestDispatcher("/jsp/teacher/list.jsp").forward(req, resp);
+				} else {
+					req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
+				}
 			} else if ("update_teacher".equals(actionType)) {
 				Teacher teacher = teacherManager.getTeacher(id);
 				if (teacher == null) {
 					throw new RuntimeException("老师信息已经不存在!!! id=" + id);
 				}
 				fowardToListPage(req,resp,true);
+				req.setAttribute("teacher", teacher);
+				req.getRequestDispatcher("/jsp/teacher/update.jsp").forward(req, resp);
 			} else if ("save_teacher".equals(actionType)) {
 				Teacher teacher = new Teacher();
 				teacher.setUsername(name);
@@ -116,6 +127,15 @@ public class ActionServlet extends HttpServlet {
 				}
 				// retrieve list page
 				fowardToListPage(req, resp, success);
+				if (success) {
+					PageModel<Teacher> pageModel = teacherManager.getTeachers(pageNo, pageSize);
+					req.setAttribute("pageNo", pageNo);
+					req.setAttribute("pageSize", pageSize);
+					req.setAttribute("pageModel", pageModel);
+					req.getRequestDispatcher("/jsp/teacher/list.jsp").forward(req, resp);
+				} else {
+					req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
+				}
 			} else if ("add_teacher".equals(actionType)) {
 				req.getRequestDispatcher("/jsp/teacher/add.jsp").forward(req, resp);
 			}

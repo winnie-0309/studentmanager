@@ -3,6 +3,7 @@
     <wb-module deploy-name="studentservice">
         <wb-resource deploy-path="/" source-path="/WebRoot"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
         <property name="context-root" value="/studentservice"/>
         <property name="java-output-path" value="/studentservice/WebRoot/WEB-INF/classes"/>
     </wb-module>

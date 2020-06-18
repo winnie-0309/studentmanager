@@ -94,8 +94,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <input type="radio" name="type" value="student" checked>学生</td>
                 </tr>
                 <tr>
-                    <td><input type="submit" value="登录" /><input type="button" onclick="register()" value="注册"><input type="reset"
-                        value="重置" />
+                    <td><input type="submit" value="登录" />
+                    <input type="button" onclick="register()" value="注册">
+                    <input type="reset" value="重置" />
                     </td>
                 </tr>
             </table>

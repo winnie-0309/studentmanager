@@ -12,7 +12,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <base href="<%=basePath%>">
     <title>新增老师</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" type="text/css" href="<%=basePath%>css/student.css">
+	<link rel="stylesheet" type="text/css" href="/css/student.css">
+	<style>
+	html {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	font-style: sans-serif;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	background-color: #4A374A;
+}
+</style>
   </head>
 <body>
 	<div id="teacherAdd">  

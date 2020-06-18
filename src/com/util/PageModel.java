@@ -1,14 +1,15 @@
 package com.util;
+import java.util.ArrayList;
 import java.util.List;  
 
 /** 
  * 封装分页信息 
- *  @author yanran
+ * @author yanran 
  * 
  */  
 public class PageModel<E> {  
     //结果集  
-    private List<E> list;  
+    private List<E> list = new ArrayList<E>();  
     //查询记录数  
     private int totalRecords;   
     //每页多少条数据  

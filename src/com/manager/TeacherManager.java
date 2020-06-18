@@ -1,6 +1,7 @@
 package com.manager;
 
 import java.util.List;
+import java.util.Map;
 
 import com.model.Student;
 import com.model.Teacher;
@@ -33,9 +34,12 @@ public interface TeacherManager {
 	// 查询所有学生的信息
 	public List<Student> getAllStudents();
 	// 学生分页查询
-	public List<Student> getStudents(int start, int pagesize);
-	// 老师分页查询
+	public List<Student> getStudents(String start, String pagesize);
+	// 查询学生信息需分页
 	public PageModel<Teacher> getTeachers(String start, String pagesize);
+	// 查询学生信息需分页- 有查询条件 
+	public PageModel<Teacher> queryTeachers(Map<String, String> parameters, String pageNo,
+			String pageSize);
 	
 
 }
