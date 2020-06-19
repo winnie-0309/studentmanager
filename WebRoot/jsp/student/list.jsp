@@ -1,12 +1,10 @@
-<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
 <%@ page import="com.model.*"%>
 <%@ page import="com.util.*"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -20,15 +18,12 @@
 <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 <meta http-equiv="description" content="学生列表">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="css/student.css">
-<script type="text/javascript">
-	
-</script>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>css/student.css"/>
+<script type="text/javascript" src="<%=basePath%>js/student.js"></script>
 </head>
-
 <body>
-	<h1>学生列表</h1>
 	<%
+		String type = (String) session.getAttribute("type");
 		String pageSize = (String) request.getAttribute("pageSize");
 		String pageNo = (String) request.getAttribute("pageNo");
 		PageModel<Student> pageModel = (PageModel<Student>) request
@@ -40,12 +35,12 @@
 		<table align="center">
 			<tr>
 				<td align="center" colspan="4">
-					<h2>所有信息</h2></td>
+					<h1 align="center">学生列表信息</h1></td>
 			<tr>
 				<td>姓名</td>
-				<td><input type="text" name="name" />
+				<td><input type="text" name="name" id="name"/>
 				</td>
-				<td><input type="button" value="查找"/>
+				<td><input type="button" value="查找" name="query" id="query" onclick="javascript:search('student','name','<%=basePath%>');"/>
 				</td>
 				<td><a href="<%=basePath%>servlet/action?action=add_student">新增</a>
 				</td>
@@ -73,9 +68,11 @@
 				<td><%=rec.getId()%></td>
 				<td><%=rec.getName()%></td>
 				<td><%=rec.getAddress()%></td>
-				<td><a
-					href="<%=basePath%>servlet/action?action=update_student&id=<%=rec.getId()%>">修改</a><a
-					href="<%=basePath%>servlet/action?action=delete_student&id=<%=rec.getId()%>">刪除</a>
+				<td>
+				  <% if("teacher".equals(type)){ %>
+				  <a href="<%=basePath%>servlet/action?action=update_student&id=<%=rec.getId()%>">修改</a>
+				  <a href="<%=basePath%>servlet/action?action=delete_student&id=<%=rec.getId()%>">刪除</a>
+				   <% } %>
 				</td>
 			</tr>
 			<%
@@ -84,7 +81,7 @@
 			%>
 		</table>
 
-		<TABLE border="0" width="100%">
+		<TABLE border="0" align="center">
 			<TR>
 				<TD align="left"><a>每页条数</a> <select name="pageSize"
 					onchange="document.all.pageNo.value='1';document.all.form1.submit();">

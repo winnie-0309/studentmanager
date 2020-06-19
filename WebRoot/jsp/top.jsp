@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
 <%@ page import="com.model.*"%>
 <%@ page import="com.util.*"%>
@@ -17,6 +16,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <%
  	Person p =(Person) session.getAttribute("person");
  %>
-	<h2>Welcome <%=p.getName()%> - <%=p.getTitle() %></h2>
+	<h2>Welcome <%=p.getName()%> - <%=p.getTitle() %> <a href="<%=basePath%>login.jsp" target="_top">[退出]</a></h2>
+
 </body>
 </html>

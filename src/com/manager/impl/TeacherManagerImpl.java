@@ -3,7 +3,6 @@ package com.manager.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,23 +10,25 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.exception.ApplicationException;
 import com.manager.TeacherManager;
 import com.model.Student;
 import com.model.Teacher;
-import com.util.DBO;
+import com.util.DBConnection;
 import com.util.DateFormater;
 import com.util.PageModel;
+import org.apache.log4j.Logger;
 
 public class TeacherManagerImpl implements TeacherManager {
-
+	private static Logger logger = Logger.getLogger(TeacherManagerImpl.class);
 	public Teacher checkLogin(String name, String password) {
 		Teacher t = null;
 		Connection conn = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		String sql = "select * from teacher where username=? and password=?";
-		conn = DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, name);
 			pst.setString(2, password);
@@ -38,11 +39,10 @@ public class TeacherManagerImpl implements TeacherManager {
 				t.setUsername(rs.getString("username"));
 				t.setPassword(rs.getString("password"));
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			
+			DBConnection.close(conn, pst, rs);
 		}
 		return t;
 	}
@@ -53,19 +53,18 @@ public class TeacherManagerImpl implements TeacherManager {
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		String sql = "select max(id) as id from teacher";
-		conn = DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			rs = pst.executeQuery();
 			while (rs.next()) {
 				int maxId = rs.getInt("id");
 				return maxId+1;
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-
+			DBConnection.close(conn, pst, rs);
 		}
 		return -1;
 	}
@@ -76,12 +75,12 @@ public class TeacherManagerImpl implements TeacherManager {
 		String sql = "insert into teacher(id,username,password) values(?,?,?)";
 		Connection conn = null;
 		PreparedStatement pst = null;
-		conn = DBO.getConnection();
 		int teacherMaxId = getMaxId();
 		if(teacherMaxId==-1){
 			throw new RuntimeException("产生最大序号失败！！！");
 		}
 		try {
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			//get oracle sequence
 			//1. select max(id) from student
@@ -90,11 +89,10 @@ public class TeacherManagerImpl implements TeacherManager {
 			pst.setString(3, teacher.getPassword());
 			pst.executeUpdate();
 			flag = true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			
+			DBConnection.close(conn, pst, null);
 		}
 		return flag;
 	}
@@ -104,18 +102,17 @@ public class TeacherManagerImpl implements TeacherManager {
 		String sql = "update teacher set username=?,password=? where id='" + teacher.getId() + "'";
 		Connection conn = null;
 		PreparedStatement pst = null;
-		conn = (Connection) DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, teacher.getUsername());
 			pst.setString(2, teacher.getPassword());
 			pst.executeUpdate();
 			flag = true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			
+			DBConnection.close(conn, pst, null);
 		}
 		return flag;
 	}
@@ -126,17 +123,16 @@ public class TeacherManagerImpl implements TeacherManager {
 		System.out.println(sql);
 		Connection conn = null;
 		PreparedStatement pst = null;
-		conn = DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			int row = pst.executeUpdate();
 			if (row > 0)
 				flag = true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			
+			DBConnection.close(conn, pst, null);
 		}
 		return flag;
 	}
@@ -148,7 +144,7 @@ public class TeacherManagerImpl implements TeacherManager {
 		ResultSet rs = null;
 		Connection conn = null;
 		try {
-			conn = DBO.getConnection();
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, Integer.valueOf(teachId));
 			rs = pst.executeQuery();
@@ -161,11 +157,10 @@ public class TeacherManagerImpl implements TeacherManager {
 			}
 			return t;
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new ApplicationException(e);
 		} finally {
-			//TODO
+			DBConnection.close(conn, pst, null);
 		}
-		return null;
 	}
 	
 	public List<Teacher> getAllTeacher(String teachId) {
@@ -174,8 +169,8 @@ public class TeacherManagerImpl implements TeacherManager {
 		Connection conn = null;
 		Statement st = null;
 		ResultSet rs = null;
-		conn = DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);
 			while (rs.next()) {
@@ -185,14 +180,12 @@ public class TeacherManagerImpl implements TeacherManager {
 				t.setPassword(rs.getString("password"));
 				list.add(t);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			//TODO
+			DBConnection.close(conn, st, null);
 		}
 		return list;
-
 	}
 
 	public boolean addStudent(Student student) {
@@ -200,12 +193,12 @@ public class TeacherManagerImpl implements TeacherManager {
 		String sql = "insert into student(id,name,password,gender,birthday,address) values(?,?,?,?,?,?)";
 		Connection conn = null;
 		PreparedStatement pst = null;
-		conn = DBO.getConnection();
 		int studentMaxId = getMaxId();
 		if(studentMaxId==-1){
 			throw new RuntimeException("产生最大序号失败！！！");
 		}
 		try {
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			//get oracle sequence
 			//1. select max(id) from student
@@ -217,55 +210,51 @@ public class TeacherManagerImpl implements TeacherManager {
 			pst.setString(6, student.getAddress());
 			pst.executeUpdate();
 			flag = true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			
+			DBConnection.close(conn, pst, null);
 		}
 		return flag;
 	}
 
 
-	public boolean deleteStudent(String Id) {
-		// TODO Auto-generated method stub
-				boolean flag = false;
-				String sql = "delete from student where id=" + Id + "";
-				System.out.println(sql);
-				Connection conn = null;
-				PreparedStatement pst = null;
-				conn = DBO.getConnection();
-				try {
-					pst = conn.prepareStatement(sql);
-					int row = pst.executeUpdate();
-					if (row > 0)
-						flag = true;
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} finally {
-					
-				}
-				return flag;
-			}
+	public boolean deleteStudent(String id) {
+		boolean flag = false;
+		String sql = "delete from student where id=? ";
+		Connection conn = null;
+		PreparedStatement pst = null;
+		try {
+			conn = DBConnection.getConnection();
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, Integer.valueOf(id));
+			int row = pst.executeUpdate();
+			if (row > 0)
+				flag = true;
+		} catch (Exception e) {
+			throw new ApplicationException(e);
+		} finally {
+			DBConnection.close(conn, pst, null);
+		}
+		return flag;
+	}
+
 	public boolean updateStudent(Student student) {
-		// TODO Auto-generated method stub
 		boolean flag = false;
 		String sql = "delete from student where id=" +student + "";
 		System.out.println(sql);
 		Connection conn = null;
 		PreparedStatement pst = null;
-		conn = DBO.getConnection();
+		conn = DBConnection.getConnection();
 		try {
 			pst = conn.prepareStatement(sql);
 			int row = pst.executeUpdate();
 			if (row > 0)
 				flag = true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			
+			DBConnection.close(conn, pst, null);
 		}
 		return flag;
 	}
@@ -276,8 +265,8 @@ public class TeacherManagerImpl implements TeacherManager {
 		Connection conn = null;
 		Statement st = null;
 		ResultSet rs = null;
-		conn = DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);
 			while (rs.next()) {
@@ -287,11 +276,10 @@ public class TeacherManagerImpl implements TeacherManager {
 				t.setPassword(rs.getString("password"));
 				list.add(t);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			//TODO
+			DBConnection.close(conn, st, rs);
 		}
 		return list;
 
@@ -303,8 +291,8 @@ public class TeacherManagerImpl implements TeacherManager {
 		Connection conn = null;
 		Statement st = null;
 		ResultSet rs = null;
-		conn = DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);
 			while (rs.next()) {
@@ -317,11 +305,10 @@ public class TeacherManagerImpl implements TeacherManager {
 				s.setAddress(rs.getString("address"));
 				list.add(s);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			//TODO
+			DBConnection.close(conn, st, rs);
 		}
 		return list;
 
@@ -335,7 +322,7 @@ public class TeacherManagerImpl implements TeacherManager {
 		ResultSet rs = null;
 		Connection conn = null;
 		try {
-			conn = DBO.getConnection();
+			conn = DBConnection.getConnection();
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);
 			while (rs.next()) {
@@ -349,33 +336,10 @@ public class TeacherManagerImpl implements TeacherManager {
 				s.setAddress(rs.getString("address"));
 				list.add(s);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (st != null) {
-				try {
-					st.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			DBConnection.close(conn, st, rs);
 		}
 		return list;
 	}
@@ -387,7 +351,7 @@ public class TeacherManagerImpl implements TeacherManager {
 		Connection conn = null;
 		List<Teacher> results = new ArrayList<Teacher>();
 		try {
-			conn = DBO.getConnection();
+			conn = DBConnection.getConnection();
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);
 			while (rs.next()) {
@@ -398,33 +362,10 @@ public class TeacherManagerImpl implements TeacherManager {
 				t.setPassword(rs.getString("password"));
 				results.add(t);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (st != null) {
-				try {
-					st.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			DBConnection.close(conn, st, rs);
 		}
 			
 		return results;
@@ -448,16 +389,18 @@ public class TeacherManagerImpl implements TeacherManager {
 			}
 		}
 		//找到老师表总记录数
+		logger.info("总记录SQL:"+baseSql);
 		List<Teacher> totals = executeSql(baseSql);
-		
+
 		// oracle and H2
 		String sql ="SELECT * FROM ("+baseSql+") a WHERE a.rn>=("+pageNo+" - 1) * "+pageSize+" + 1 AND a.rn <= "+pageNo+" * "+pageSize;
 		//找到符合条件的老师记录
+		logger.info("分页SQL:"+sql);
 		Statement st = null;
 		ResultSet rs = null;
 		Connection conn = null;
 		try {
-			conn = DBO.getConnection();
+			conn = DBConnection.getConnection();
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);
 			while (rs.next()) {
@@ -473,33 +416,10 @@ public class TeacherManagerImpl implements TeacherManager {
 			pageModel.setPageSize(Integer.parseInt(pageSize));
 			pageModel.setTotalRecords(totals.size());
 			pageModel.setList(list);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ApplicationException(e);
 		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (st != null) {
-				try {
-					st.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			DBConnection.close(conn, st, rs);
 		}
 		return pageModel;
 	}

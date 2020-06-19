@@ -1,12 +1,10 @@
-<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
 <%@ page import="com.model.*"%>
 <%@ page import="com.util.*"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -19,50 +17,28 @@
 <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 <meta http-equiv="description" content="老师列表">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="css/student.css">
-<script type="text/javascript">
-	function getRadioBoxValue(radioName){
-                 var obj = document.getElementsByName(radioName);
-                       for(i=0; i<obj.length;i++)    {
-                       if(obj[i].checked)    {
-                           return   obj[i].value;
-                       }
-                   }
-                  return "undefined";
-            }
-            
-     function query(){
-       var type = getRadioBoxValue("type");
-       var name = document.getElementById("username");
-       window.href="<%=basePath%>servlet/Page?type="+type+"&name="+name;
-     }
-	            
-</script>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>css/student.css"/>
+<script type="text/javascript" src="<%=basePath%>js/student.js"></script>
 </head>
 <body>
-	<h1>老师列表</h1>
 	<%
+        String type = (String) session.getAttribute("type");
 		String pageSize = (String) request.getAttribute("pageSize");
 		String pageNo = (String) request.getAttribute("pageNo");
-		PageModel<Teacher> pageModel = (PageModel<Teacher>) request
-				.getAttribute("pageModel");
+		PageModel<Teacher> pageModel = (PageModel<Teacher>) request.getAttribute("pageModel");
 		List<Teacher> list = pageModel.getList();
 	%>
 	<form name="form1" action="<%=basePath%>servlet/page?type=teacher" method="post">
-		<table align="center">
+	    <table align="center">
 			<tr>
 				<td align="center" colspan="4">
-					<h2>所有信息</h2>
+					<h1 align="center">老师列表信息</h1>
 				</td>
 				</tr>
-				<tr>
-				<td><input type="radio" name="type" value="teacher" checked>教师
-					<input type="radio" name="type" value="student">学生</td>
-			</tr>
 			<tr>
 				<td>姓名</td>
-				<td><input type="text" id="username"/></td>
-				<td><input type="button" name='query' id='query' value="查找" onclick="javascript:queryTeacher();"/></td>
+				<td><input type="text" id="username" name="username" /></td>
+				<td><input type="button" name="query" id="query" value="查找" onclick="javascript:search('<%=type%>','username','<%=basePath%>');"/></td>
 				<td><a href="<%=basePath%>servlet/action?action=add_teacher">新增</a>
 				</td>
 			</tr>
@@ -94,7 +70,7 @@
 			%>
 		</table>
 
-		<TABLE border="0" width="100%">
+		<TABLE align="center" border="0" >
 			<TR>
 				<TD align="left"><a>每页条数</a> <select name="pageSize"
 					onchange="document.all.pageNo.value='1';document.all.form1.submit();">

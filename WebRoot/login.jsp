@@ -1,4 +1,7 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*"%>
+<%@ page import="com.model.*"%>
+<%@ page import="com.util.*"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -15,9 +18,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="expires" content="0">    
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="css/student.css">
-	-->
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>css/student.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>css/login.css"/>
+    <script type="text/javascript" src="<%=basePath%>js/student.js"></script>
 	<script language="javascript">
 	        /*分析：点击图片，需要换一张
               1.给图片绑定单击事件
@@ -28,40 +31,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 　　　　　　　　　　this.src="<%=basePath%>servlet/picCodeGenerator?nocache=" + new Date().getTime();
 　　　　　　　　 }
 　　　　　　 }
-
-            function getRadioBoxValue(radioName){
-                 var obj = document.getElementsByName(radioName);
-                       for(i=0; i<obj.length;i++)    {
-                       if(obj[i].checked)    {
-                           return   obj[i].value;
-                       }
-                   }
-                  return "undefined";
-            }
-
-            function register(){
-                var type = getRadioBoxValue("type");
-                location.href="<%=basePath%>servlet/action?action=add_"+type;
-            }
     </script>
-
   </head>
-  
   <body>
   <style>
-    shtml {
-		width: 100%;
-		height: 100%;
-		overflow: hidden;
-		font-style: sans-serif;
-	}
-	
-	body {
-		width: 100%;
-		height: 100%;
-		margin: 0;
-		background-color: #4A374A;
-	}
 
   </style>
  
@@ -95,7 +68,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </tr>
                 <tr>
                     <td><input type="submit" value="登录" />
-                    <input type="button" onclick="register()" value="注册">
+                    <input type="button" onclick="register('type')" value="注册">
                     <input type="reset" value="重置" />
                     </td>
                 </tr>

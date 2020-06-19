@@ -6,29 +6,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import com.exception.ApplicationException;
 import com.manager.StudentManager;
 import com.model.Student;
-import com.model.Teacher;
-import com.util.DBO;
+import com.util.DBConnection;
 import com.util.DateFormater;
 import com.util.PageModel;
+import org.apache.log4j.Logger;
 
 public class StudentManagerImpl implements StudentManager {
-	
+	private static Logger logger = Logger.getLogger(StudentManagerImpl.class);
 	public Student checkLogin(String name, String password) {
 		Student s = null;
 		Connection conn = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		String sql = "select * from student where name=? and password=?";
-		conn = DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, name);
 			pst.setString(2, password);
@@ -43,10 +43,9 @@ public class StudentManagerImpl implements StudentManager {
 				s.setBirthday(DateFormater.sqlDate2String(rs.getDate("birthday")));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ApplicationException("登录失败:" + e.getMessage(), e);
 		} finally {
-			
+			DBConnection.close(conn, pst, rs);
 		}
 		return s;
 	}
@@ -57,8 +56,8 @@ public class StudentManagerImpl implements StudentManager {
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		String sql = "select max(id) as id from student";
-		conn = DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			rs = pst.executeQuery();
 			while (rs.next()) {
@@ -66,10 +65,9 @@ public class StudentManagerImpl implements StudentManager {
 				return maxId+1;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ApplicationException("获取最大序号失败:" + e.getMessage(), e);
 		} finally {
-
+			DBConnection.close(conn, pst, rs);
 		}
 		return -1;
 	}
@@ -79,12 +77,12 @@ public class StudentManagerImpl implements StudentManager {
 		String sql = "insert into student(id,name,password,gender,birthday,address) values(?,?,?,?,?,?)";
 		Connection conn = null;
 		PreparedStatement pst = null;
-		conn = DBO.getConnection();
 		int studentMaxId = getMaxId();
 		if(studentMaxId==-1){
-			throw new RuntimeException("产生最大序号失败！！！");
+			throw new ApplicationException("产生最大序号失败！！！");
 		}
 		try {
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			//get oracle sequence
 			//1. select max(id) from student
@@ -97,22 +95,20 @@ public class StudentManagerImpl implements StudentManager {
 			pst.executeUpdate();
 			flag = true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ApplicationException("新增学生失败:" + e.getMessage(), e);
 		} finally {
-			
+			DBConnection.close(conn, pst, null);
 		}
 		return flag;
 	}
 
 	public boolean updateStudent(Student student) {
-		// TODO Auto-generated method stub
 		boolean flag = false;
 		String sql = "update student set name=?,password=?,gender=?,birthday=?,address=? where id='" + student.getId() + "'";
 		Connection conn = null;
 		PreparedStatement pst = null;
-		conn = (Connection) DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, student.getName());
 			pst.setString(2, student.getPassword());
@@ -122,33 +118,29 @@ public class StudentManagerImpl implements StudentManager {
 			pst.executeUpdate();
 			flag = true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ApplicationException("更新学生失败:" + e.getMessage(), e);
 		} finally {
-			
+			DBConnection.close(conn, pst, null);
 		}
 		return flag;
 	}
 
-	public boolean deleteStudent(String sid) {
-		// TODO Auto-generated method stub
+	public boolean deleteStudent(String id) {
 		boolean flag = false;
-		//String sql = "delete from student where sid='" + sid + "'";
-		String sql = "delete from student where id=" + sid + "";
-		System.out.println(sql);
+		String sql = "delete from student where id=?";
 		Connection conn = null;
 		PreparedStatement pst = null;
-		conn = DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
+			pst.setInt(1,Integer.valueOf(id));
 			int row = pst.executeUpdate();
 			if (row > 0)
 				flag = true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ApplicationException("删除学生失败:" + e.getMessage(), e);
 		} finally {
-			
+			DBConnection.close(conn, pst, null);
 		}
 		return flag;
 	}
@@ -159,8 +151,8 @@ public class StudentManagerImpl implements StudentManager {
 		Connection conn = null;
 		Statement st = null;
 		ResultSet rs = null;
-		conn = DBO.getConnection();
 		try {
+			conn = DBConnection.getConnection();
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);
 			while (rs.next()) {
@@ -174,10 +166,9 @@ public class StudentManagerImpl implements StudentManager {
 				list.add(s);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ApplicationException("删除学生失败:" + e.getMessage(), e);
 		} finally {
-			//TODO
+			DBConnection.close(conn, st, rs);
 		}
 		return list;
 
@@ -186,12 +177,11 @@ public class StudentManagerImpl implements StudentManager {
 	public Student getStudent(String id) {
 		// oracle and H2
 		String sql = "SELECT * FROM student where id=?";
-
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		Connection conn = null;
 		try {
-			conn = DBO.getConnection();
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, Integer.valueOf(id));
 			rs = pst.executeQuery();
@@ -207,12 +197,11 @@ public class StudentManagerImpl implements StudentManager {
 				s.setAddress(rs.getString("address"));
 			}
 			return s;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			throw new ApplicationException("获取学生失败:" + e.getMessage(), e);
 		} finally {
-			//TODO
+			DBConnection.close(conn, pst, rs);
 		}
-		return null;
 	}
 
 	private int getTotal(){
@@ -222,10 +211,9 @@ public class StudentManagerImpl implements StudentManager {
 		ResultSet rs = null;
 		Connection conn = null;
 		try {
-			conn = DBO.getConnection();
+			conn = DBConnection.getConnection();
 			pst = conn.prepareStatement(sql);
 			rs = pst.executeQuery();
-			Student s = null;
 			while (rs.next()) {
 				rs = pst.executeQuery();
 				int total = 0;
@@ -234,10 +222,10 @@ public class StudentManagerImpl implements StudentManager {
 				}
 				return total;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			throw new ApplicationException("获取总记录数失败:" + e.getMessage(), e);
 		} finally {
-			//TODO
+			DBConnection.close(conn, pst, rs);
 		}
 		return 0;
 	}
@@ -258,14 +246,16 @@ public class StudentManagerImpl implements StudentManager {
 			}
 		}
 		//找到表总记录数
+		logger.info("总记录SQL:"+baseSql);
 		List<Student> totals = executeSql(baseSql);
 		//
 		String sql ="SELECT * FROM ("+baseSql+") a WHERE a.rn>=("+pageNo+" - 1) * "+pageSize+" + 1 AND a.rn <= "+pageNo+" * "+pageSize;
+		logger.info("总记录SQL:"+baseSql);
 		Statement st = null;
 		ResultSet rs = null;
 		Connection conn = null;
 		try {
-			conn = DBO.getConnection();
+			conn = DBConnection.getConnection();
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);
 			while (rs.next()) {
@@ -286,32 +276,9 @@ public class StudentManagerImpl implements StudentManager {
 			pageModel.setTotalRecords(totals.size());
 			pageModel.setList(list);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ApplicationException("获取分页记录数失败:" + e.getMessage(), e);
 		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (st != null) {
-				try {
-					st.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			DBConnection.close(conn, st, rs);
 		}
 		return pageModel;
 	}
@@ -322,7 +289,7 @@ public class StudentManagerImpl implements StudentManager {
 		Connection conn = null;
 		List<Student> results = new ArrayList<Student>();
 		try {
-			conn = DBO.getConnection();
+			conn = DBConnection.getConnection();
 			st = conn.createStatement();
 			rs = st.executeQuery(baseSql);
 			while (rs.next()) {
@@ -337,32 +304,9 @@ public class StudentManagerImpl implements StudentManager {
 				results.add(s);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ApplicationException("获取分页总记录数失败:" + e.getMessage(), e);
 		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (st != null) {
-				try {
-					st.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			DBConnection.close(conn, st, rs);
 		}
 			
 		return results;

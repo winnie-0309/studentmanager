@@ -85,6 +85,5 @@ public class PicCodeGenerator extends HttpServlet {
 		
 		//3.将验证码(number)绑定到session对象上
 		request.getSession().setAttribute("checkcode", number);
-		//System.out.println("Generated check code "+number);
 	}
 }
