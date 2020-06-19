@@ -25,6 +25,7 @@ public class DBConnection {
 			Class.forName(driver);
 		} catch (ClassNotFoundException e) {
 			logger.error("驱动加载失败:"+e.getMessage(),e);
+			throw new ApplicationException("数据库驱动加载失败,请检查数据库配置!!!" + e.getMessage(), e);
 		}
 	}
 
