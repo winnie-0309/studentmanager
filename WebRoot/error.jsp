@@ -18,40 +18,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="expires" content="0">    
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
-	<link rel="stylesheet" type="text/css" href="css/student.css">
-	<style type="text/css">
-        #errorMessageDiv
-        {
-         width:200px;
-         height:100px;
-         line-height:100px;
-         text-align:center;
-          display:none;
-         background-color:green;
-        }
-    </style>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>css/student.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>css/login.css"/>
+    <script type="text/javascript" src="<%=basePath%>js/student.js"></script>
     <script type="text/javascript">
-        function toggleMessage(obj)
-        {
-         if(obj.style.display=="block")
-         {
-          obj.style.display='none';
-         }
-         else
-         {
-          obj.style.display='block';
-         }
-        }
-        window.onload=function()
-        {
-         var olink=document.getElementById("showErrorMessageButton");
-         var odiv=document.getElementById("errorMessageDiv");
-         olink.onclick=function()
-         {
-          toggleMessage(odiv);
-          return false;
-         }
-        }
+	    window.onload=function(){
+	      var olink=document.getElementById("showErrorMessageButton");
+	      var odiv=document.getElementById("errorMessageDiv");
+	      olink.onclick=function(){
+	       toggleMessage(odiv);
+	       return false;
+	      }
+	    }
     </script>
 
   </head>

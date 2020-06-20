@@ -22,16 +22,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="<%=basePath%>css/login.css"/>
     <script type="text/javascript" src="<%=basePath%>js/student.js"></script>
 	<script language="javascript">
-	        /*分析：点击图片，需要换一张
-              1.给图片绑定单击事件
-              2.重新设置图片的src属性值
-            */
-　　　　　　window.onload = function(){
-　　　　　　　　 document.getElementById("CreateCheckCode").onclick = function(){
-　　　　　　　　　　this.src="<%=basePath%>servlet/picCodeGenerator?nocache=" + new Date().getTime();
-　　　　　　　　 }
-　　　　　　 }
+		window.onload = function(){
+			document.getElementById("CreateCheckCode").onclick = function(){
+			this.src="<%=basePath%>servlet/picCodeGenerator?nocache=" + new Date().getTime();
+		}}
     </script>
+    
   </head>
   <body>
   <style>

@@ -6,40 +6,28 @@
 	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <display-name></display-name>
     <servlet>
-        <description>This is the description of my J2EE component</description>
-        <display-name>This is the display name of my J2EE component</display-name>
+        <description>操作相关servlet</description>
+        <display-name>ActionServlet</display-name>
         <servlet-name>ActionServlet</servlet-name>
         <servlet-class>com.servlet.ActionServlet</servlet-class>
     </servlet>
     <servlet>
-        <description>This is the description of my J2EE component</description>
-        <display-name>This is the display name of my J2EE component</display-name>
+        <description>登录检查 servlet</description>
+        <display-name>CheckLogin</display-name>
         <servlet-name>CheckLogin</servlet-name>
         <servlet-class>com.servlet.CheckLogin</servlet-class>
     </servlet>
     <servlet>
-        <description>This is the description of my J2EE component</description>
-        <display-name>This is the display name of my J2EE component</display-name>
-        <servlet-name>HomePage</servlet-name>
-        <servlet-class>com.servlet.HomePage</servlet-class>
-    </servlet>
-    <servlet>
-        <description>This is the description of my J2EE component</description>
-        <display-name>This is the display name of my J2EE component</display-name>
+        <description>分页 列表servlet</description>
+        <display-name>Page</display-name>
         <servlet-name>Page</servlet-name>
         <servlet-class>com.servlet.Page</servlet-class>
     </servlet>
     <servlet>
-        <description>This is the description of my J2EE component</description>
-        <display-name>This is the display name of my J2EE component</display-name>
+        <description>验证码servlet</description>
+        <display-name>PicCodeGenerator</display-name>
         <servlet-name>PicCodeGenerator</servlet-name>
         <servlet-class>com.servlet.PicCodeGenerator</servlet-class>
-    </servlet>
-    <servlet>
-        <description>This is the description of my J2EE component</description>
-        <display-name>This is the display name of my J2EE component</display-name>
-        <servlet-name>Register</servlet-name>
-        <servlet-class>com.servlet.Register</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -51,20 +39,12 @@
         <url-pattern>/servlet/checkLogin</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>HomePage</servlet-name>
-        <url-pattern>/servlet/homePage</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>Page</servlet-name>
         <url-pattern>/servlet/page</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PicCodeGenerator</servlet-name>
         <url-pattern>/servlet/picCodeGenerator</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Register</servlet-name>
-        <url-pattern>/servlet/register</url-pattern>
     </servlet-mapping>
 
     <filter>

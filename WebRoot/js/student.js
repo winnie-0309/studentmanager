@@ -19,3 +19,13 @@ function search(type, element, basePath){
     //window.parent.main.location.href="<%=basePath%>servlet/page?pageNo=1&pageSize=5&type="+type+"&name="+name;
     window.top.main.location.href=basePath+"servlet/page?pageNo=1&pageSize=5&type="+type+"&name="+name;
 }
+
+
+function toggleMessage(obj){
+	if(obj.style.display =="block" ){
+	  obj.style.display='none';	
+	}
+	else{
+	  obj.style.display='block';
+	}
+}

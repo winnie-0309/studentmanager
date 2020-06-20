@@ -33,4 +33,14 @@ h1 {
 	margin: 0.67em 0;
 }
 
+ #errorMessageDiv
+{
+	width:200px;
+	height:100px;
+	line-height:100px;
+	text-align:center;
+	display:none;
+	background-color:green;
+}
+
 
