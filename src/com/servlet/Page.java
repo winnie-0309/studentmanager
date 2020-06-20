@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import com.manager.StudentManager;
 import com.manager.TeacherManager;
 import com.manager.impl.StudentManagerImpl;
@@ -26,6 +28,8 @@ import com.util.PageModel;
  */
 public class Page extends HttpServlet {
 
+	private static Logger logger = Logger.getLogger(Page.class);
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		this.doPost(req, resp);
@@ -34,10 +38,13 @@ public class Page extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//String type = (String)request.getSession().getAttribute("type");
+		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
 		String type = (String)request.getParameter("type");
 		String pageNo = request.getParameter("pageNo");
 		String pageSize = request.getParameter("pageSize");
 		String name = request.getParameter("name");
+		logger.info(String.format("pageNo=%s, pageSize=%s, name=%s", pageNo,pageSize, name));
 		request.setAttribute("pageNo", pageNo);
 		request.setAttribute("pageSize", pageSize);
 		Map<String, String> parameters = new HashMap<String,String>();

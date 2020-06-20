@@ -37,8 +37,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</tr>
 			<tr>
 				<td>姓名</td>
-				<td><input type="text" id="username" name="username" /></td>
-				<td><input type="button" name="query" id="query" value="查找" onclick="javascript:search('<%=type%>','username','<%=basePath%>');"/></td>
+				<td><input type="text" id="name" name="name" /></td>
+				<td><input type="button" name="query" id="query" value="查找" onclick="javascript:search('<%=type%>','name','<%=basePath%>');"/></td>
 				<td><a href="<%=basePath%>servlet/action?action=add_teacher">新增</a>
 				</td>
 			</tr>
