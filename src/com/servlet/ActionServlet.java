@@ -121,7 +121,7 @@ public class ActionServlet extends HttpServlet {
 			req.setAttribute("pageModel", pageModel);
 			req.getRequestDispatcher("/jsp/" + type + "/list.jsp").forward(req, resp);
 		} else {
-			req.getRequestDispatcher("/jsp/error.jsp").forward(req, resp);
+			req.getRequestDispatcher("/error.jsp").forward(req, resp);
 		}
 	}
 

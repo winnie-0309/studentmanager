@@ -78,8 +78,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </td><td></td>
                 </tr>
             </table>
-            <div id="errorMessageDiv" align="left">
+            <div id="errorMessageDiv" align="left" >
                 <pre>
+                <textArea style="width:1030px; height:500px">
                     <%
                        ApplicationException exception = (ApplicationException)request.getAttribute("exception");
                         try {
@@ -116,6 +117,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             ex.printStackTrace();
                         }
                     %>
+                 </textArea>
                </pre>
             </div>
   </body>
