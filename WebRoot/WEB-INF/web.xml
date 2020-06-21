@@ -1,72 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.5" 
-	xmlns="http://java.sun.com/xml/ns/javaee" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+<web-app version="2.5"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-  <display-name></display-name>
-  <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
-    <servlet-name>ActionServlet</servlet-name>
-    <servlet-class>com.servlet.ActionServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
-    <servlet-name>CheckLogin</servlet-name>
-    <servlet-class>com.servlet.CheckLogin</servlet-class>
-  </servlet>
-  <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
-    <servlet-name>HomePage</servlet-name>
-    <servlet-class>com.servlet.HomePage</servlet-class>
-  </servlet>
-  <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
-    <servlet-name>Page</servlet-name>
-    <servlet-class>com.servlet.Page</servlet-class>
-  </servlet>
-  <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
-    <servlet-name>PicCodeGenerator</servlet-name>
-    <servlet-class>com.servlet.PicCodeGenerator</servlet-class>
-  </servlet>
-  <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
-    <servlet-name>Register</servlet-name>
-    <servlet-class>com.servlet.Register</servlet-class>
-  </servlet>
+    <display-name></display-name>
+    <servlet>
+        <description>操作相关servlet</description>
+        <display-name>ActionServlet</display-name>
+        <servlet-name>ActionServlet</servlet-name>
+        <servlet-class>com.servlet.ActionServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <description>登录检查 servlet</description>
+        <display-name>CheckLogin</display-name>
+        <servlet-name>CheckLogin</servlet-name>
+        <servlet-class>com.servlet.CheckLogin</servlet-class>
+    </servlet>
+    <servlet>
+        <description>分页 列表servlet</description>
+        <display-name>Page</display-name>
+        <servlet-name>Page</servlet-name>
+        <servlet-class>com.servlet.Page</servlet-class>
+    </servlet>
+    <servlet>
+        <description>验证码servlet</description>
+        <display-name>PicCodeGenerator</display-name>
+        <servlet-name>PicCodeGenerator</servlet-name>
+        <servlet-class>com.servlet.PicCodeGenerator</servlet-class>
+    </servlet>
 
-  <servlet-mapping>
-    <servlet-name>ActionServlet</servlet-name>
-    <url-pattern>/servlet/action</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>CheckLogin</servlet-name>
-    <url-pattern>/servlet/checkLogin</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>HomePage</servlet-name>
-    <url-pattern>/servlet/homePage</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Page</servlet-name>
-    <url-pattern>/servlet/page</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>PicCodeGenerator</servlet-name>
-    <url-pattern>/servlet/picCodeGenerator</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Register</servlet-name>
-    <url-pattern>/servlet/register</url-pattern>
-  </servlet-mapping>	
-  <welcome-file-list>
-    <welcome-file>index.jsp</welcome-file>
-  </welcome-file-list>
+    <servlet-mapping>
+        <servlet-name>ActionServlet</servlet-name>
+        <url-pattern>/servlet/action</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckLogin</servlet-name>
+        <url-pattern>/servlet/checkLogin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Page</servlet-name>
+        <url-pattern>/servlet/page</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PicCodeGenerator</servlet-name>
+        <url-pattern>/servlet/picCodeGenerator</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>ExceptionFilter</filter-name>
+        <filter-class>com.filter.ExceptionFilter</filter-class>
+        <init-param>
+            <param-name>errorPage</param-name>
+            <param-value>/error.jsp</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>ExceptionFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <welcome-file-list>
+        <welcome-file>login.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>

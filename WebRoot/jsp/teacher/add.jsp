@@ -1,7 +1,7 @@
-<%@ page language="java" pageEncoding="UTF-8"%>
-<%@ page import="java.util.*" %>
-<%@ page import="com.model.*" %>
-<%@ page import="com.util.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*"%>
+<%@ page import="com.model.*"%>
+<%@ page import="com.util.*"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -12,9 +12,41 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <base href="<%=basePath%>">
     <title>新增老师</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" type="text/css" href="../css/student.css">
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>css/student.css"/>
+	<style>
+	html {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	font-style: sans-serif;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	background-color: #4A374A;
+}
+</style>
   </head>
 <body>
-	TODO -- 新增老师（或老师注册）
+	<div id="teacherAdd">  
+        <h1 align="center">新增老师</h1>  
+        <form action="<%=basePath%>servlet/action?action=save_teacher" method="post"> 
+        <table align="center"> 
+            <tr>
+            <td>用户名：</td>
+            <td><input type="text" required="required" placeholder="用户名" name="name"/><td>
+            </tr>
+            <tr>
+            <td>密码：</td>
+            <td><input type="password" required="required" placeholder="密码" name="password"/></td>
+            </tr>
+            <tr><td><button class="but" type="submit">添加</button></td> 
+                <td><button class="but" type="reset">重置</button></td>
+             </tr>
+            </table>
+        </form>  
+    </div>  
 </body>
 </html>

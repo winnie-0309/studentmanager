@@ -15,6 +15,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 验证码生成器
+ * 主要是随机生成5位字母和数字的组合形式
+ * 如果出现不清楚的情况直接点击生成的图片，可重新生成
+ * 并将验证码存到session中用来和输入数据比较验证，防止通过代码登录，相对安全
+ */
 public class PicCodeGenerator extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public PicCodeGenerator() {
@@ -79,6 +85,5 @@ public class PicCodeGenerator extends HttpServlet {
 		
 		//3.将验证码(number)绑定到session对象上
 		request.getSession().setAttribute("checkcode", number);
-		
 	}
 }

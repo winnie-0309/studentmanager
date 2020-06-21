@@ -4,6 +4,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Connection;
 
+/**
+ * Oracle数据库连接
+ *
+ */
 public class DBO {
 	static String url = "jdbc:oracle:thin:@localhost:1521:orcl";
 	static String username = "scott";

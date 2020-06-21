@@ -1,32 +1,17 @@
 package com.model;
 
-public class Teacher {
-	private int id;
-	private String username;
-	private String password;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
+public class Teacher extends Person {
+	
 	public String getUsername() {
-		return username;
+		return getName();
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		setName(username);
 	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
+	
+	public String getTitle(){
+		return "老师";
 	}
 
 }
