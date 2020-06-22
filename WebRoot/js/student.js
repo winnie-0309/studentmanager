@@ -10,7 +10,7 @@ function getRadioBoxValue(radioName){
 
 function register(radioName, basePath){
     var type = getRadioBoxValue(radioName);
-    location.href=basePath+"servlet/action?action=add_"+type;
+    location.href=basePath+"servlet/action?operation=register&action=add_"+type;
 }
 
 function search(type, element, basePath){
@@ -23,4 +23,13 @@ function search(type, element, basePath){
     form.action = basePath+"servlet/page?pageNo=1&pageSize=5&type="+type;
     form.method = "post";
     form.submit();
+}
+
+function toggleMessage(obj){
+	if(obj.style.display =="block" ){
+	  obj.style.display='none';	
+	}
+	else{
+	  obj.style.display='block';
+	}
 }

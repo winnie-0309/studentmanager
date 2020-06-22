@@ -5,19 +5,21 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String operation = request.getParameter("operation");
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
     <base href="<%=basePath%>">
-    <title>新增学生</title>
+    <title><% if("register".equals(operation)){ %> 注册 <%} else{%>新增<%}%>学生</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" type="text/css" href="<%=basePath%>css/student.css"/>
   </head>
 <body>
 	<div id="studentAdd">  
-        <h1 align="center">新增学生</h1>  
-        <form action="<%=basePath%>servlet/action?action=save_student" method="post"> 
+        <h1 align="center"><%if("register".equals(operation)){%>注册<% }else{%>新增<%}%>学生</h1>
+        <form action="<%=basePath%>servlet/action?action=save_student" method="post">
+        <input type="hidden" name="operation" value="<%=operation%>"/>
         <table align="center"> 
             <tr>
             <td>用户名：</td>
@@ -38,7 +40,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <tr>
             <td>地址：</td>
             <td><input type="text" required="required" placeholder="地址" name="address"/></td></tr>
-            <tr><td><button class="but" type="submit">添加</button></td> 
+            <tr><td><button class="but" type="submit"><%if("register".equals(operation)){%>注册<% }else{%>添加<%}%></button></td>
                 <td><button class="but" type="reset">重置</button></td></tr>
             </table>
         </form>  

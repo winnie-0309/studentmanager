@@ -51,7 +51,8 @@ public class ActionServlet extends HttpServlet {
 		String id = req.getParameter("id");
 		String name = req.getParameter("name");
 		String password = req.getParameter("password");
-		logger.info(String.format("Parameters: id=%s , action=%s ,name=%s", id, actionType, name));
+		String operation = req.getParameter("operation");
+		logger.info(String.format("Parameters: id=%s , action=%s ,name=%s, operation=%s", id, actionType, name, operation));
 		boolean success = false;
 		
 	
@@ -88,7 +89,7 @@ public class ActionServlet extends HttpServlet {
 					student.setId(Integer.valueOf(id));
 					success = studentManager.updateStudent(student);
 				}
-				if(!isLogined(req)) {
+				if("register".equals(operation)) {
 					req.getRequestDispatcher("/login.jsp").forward(req, resp);
 				}else {
 					// retrieve list page 需要优化代码 提取为一个函数
@@ -120,7 +121,7 @@ public class ActionServlet extends HttpServlet {
 					teacher.setId(Integer.valueOf(id));
 					success = teacherManager.updateTeacher(teacher);
 				}
-				if(!isLogined(req)) {
+				if("register".equals(operation)) {
 					req.getRequestDispatcher("/login.jsp").forward(req, resp);
 				}else {
 					// retrieve list page

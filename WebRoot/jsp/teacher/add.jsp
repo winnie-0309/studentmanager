@@ -5,12 +5,13 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String operation = request.getParameter("operation");
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
     <base href="<%=basePath%>">
-    <title>新增老师</title>
+    <title><%if("register".equals(operation)){%>注册<% }else{%>新增<%}%>老师</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" type="text/css" href="<%=basePath%>css/student.css"/>
 	<style>
@@ -31,8 +32,9 @@ body {
   </head>
 <body>
 	<div id="teacherAdd">  
-        <h1 align="center">新增老师</h1>  
-        <form action="<%=basePath%>servlet/action?action=save_teacher" method="post"> 
+        <h1 align="center"><%if("register".equals(operation)){%>注册<% }else{%>新增<%}%>老师</h1>
+        <form action="<%=basePath%>servlet/action?action=save_teacher" method="post">
+        <input type="hidden" name="operation" value="<%=operation%>"/>
         <table align="center"> 
             <tr>
             <td>用户名：</td>
@@ -42,7 +44,7 @@ body {
             <td>密码：</td>
             <td><input type="password" required="required" placeholder="密码" name="password"/></td>
             </tr>
-            <tr><td><button class="but" type="submit">添加</button></td> 
+            <tr><td><button class="but" type="submit"><%if("register".equals(operation)){%>注册<% }else{%>添加<%}%></button></td>
                 <td><button class="but" type="reset">重置</button></td>
              </tr>
             </table>
