@@ -14,6 +14,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 
 /**
@@ -32,6 +34,14 @@ public class ActionServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		this.doPost(req, resp);
 	}
+	
+	private boolean isLogined(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		if(session ==null || session.getAttribute("person")==null) {
+			return false;
+		}
+		return true;
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -43,6 +53,8 @@ public class ActionServlet extends HttpServlet {
 		String password = req.getParameter("password");
 		logger.info(String.format("Parameters: id=%s , action=%s ,name=%s", id, actionType, name));
 		boolean success = false;
+		
+	
 
 		if (actionType.contains("student")) {
 			// forward to student update page
@@ -76,9 +88,13 @@ public class ActionServlet extends HttpServlet {
 					student.setId(Integer.valueOf(id));
 					success = studentManager.updateStudent(student);
 				}
-				// retrieve list page 需要优化代码 提取为一个函数
-				PageModel<Student> pageModel = studentManager.getStudents(Constants.DEFAULT_PAGENO, Constants.DEFAULT_PAGESIZE);
-				fowardToListPage(req, resp, success, "student", pageModel);
+				if(!isLogined(req)) {
+					req.getRequestDispatcher("/login.jsp").forward(req, resp);
+				}else {
+					// retrieve list page 需要优化代码 提取为一个函数
+					PageModel<Student> pageModel = studentManager.getStudents(Constants.DEFAULT_PAGENO, Constants.DEFAULT_PAGESIZE);
+					fowardToListPage(req, resp, success, "student", pageModel);
+				}
 			} else if ("add_student".equals(actionType)) {
 				req.getRequestDispatcher("/jsp/student/add.jsp").forward(req, resp);
 			}
@@ -104,9 +120,13 @@ public class ActionServlet extends HttpServlet {
 					teacher.setId(Integer.valueOf(id));
 					success = teacherManager.updateTeacher(teacher);
 				}
-				// retrieve list page
-				PageModel<Teacher> pageModel = teacherManager.getTeachers(Constants.DEFAULT_PAGENO, Constants.DEFAULT_PAGESIZE);
-				fowardToListPage(req, resp, success, "teacher", pageModel);
+				if(!isLogined(req)) {
+					req.getRequestDispatcher("/login.jsp").forward(req, resp);
+				}else {
+					// retrieve list page
+					PageModel<Teacher> pageModel = teacherManager.getTeachers(Constants.DEFAULT_PAGENO, Constants.DEFAULT_PAGESIZE);
+					fowardToListPage(req, resp, success, "teacher", pageModel);
+				}
 			} else if ("add_teacher".equals(actionType)) {
 				req.getRequestDispatcher("/jsp/teacher/add.jsp").forward(req, resp);
 			}
