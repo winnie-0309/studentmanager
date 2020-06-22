@@ -64,7 +64,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </tr>
                 <tr>
                     <td><input type="submit" value="登录" />
-                    <input type="button" onclick="register('type')" value="注册">
+                    <input type="button" onclick="register('type','<%=basePath%>')" value="注册">
                     <input type="reset" value="重置" />
                     </td>
                 </tr>
